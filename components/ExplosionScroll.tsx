@@ -5,8 +5,8 @@ import { useMotionValue, useTransform } from "framer-motion";
 import TextOverlay from "./TextOverlay";
 
 const FRAME_COUNT = 128;
-// Use an absolute path prefixed with the GitHub Pages repository name
-const BASE_PATH = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/sequence-1`;
+// Use NODE_ENV to reliably determine if we are in the GitHub Pages production build
+const BASE_PATH = process.env.NODE_ENV === "production" ? "/smthnew/sequence-1" : "/sequence-1";
 // Total scrollable height = 500vh, so scrollTrackHeight needs to exceed viewport
 // We set the container to 500vh and measure actual scrollable distance
 const SCROLL_MULTIPLIER = 5; // 500vh
@@ -55,10 +55,7 @@ export default function ExplosionScroll() {
 
         for (let i = 0; i < FRAME_COUNT; i++) {
             const img = new Image();
-            // Prefix with process.env.NEXT_PUBLIC_BASE_PATH for GH Pages, default to empty for local
-            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
-            // Use an absolute path if there's a basePath, otherwise use a relative one starting with a slash
-            img.src = `${basePath}/sequence-1/ezgif-frame-${String(i + 1).padStart(3, "0")}.png`;
+            img.src = `${BASE_PATH}/ezgif-frame-${String(i + 1).padStart(3, "0")}.png`;
             imgs[i] = img;
 
             const onDone = () => {
