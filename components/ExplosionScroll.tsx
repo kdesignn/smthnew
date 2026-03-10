@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
-import { useMotionValue, useTransform } from "framer-motion";
+import { useMotionValue, useTransform, motion } from "framer-motion";
 import TextOverlay from "./TextOverlay";
 
 const FRAME_COUNT = 128;
@@ -127,6 +127,19 @@ export default function ExplosionScroll() {
         }
     }, [isReady, drawFrame]);
 
+    const [isFinalFrame, setIsFinalFrame] = useState(false);
+
+    useEffect(() => {
+        const unsubscribe = scrollProgress.on("change", (latest) => {
+            if (latest >= 0.982) {
+                setIsFinalFrame(true);
+            } else {
+                setIsFinalFrame(false);
+            }
+        });
+        return unsubscribe;
+    }, [scrollProgress]);
+
     return (
         <>
             {/* 
@@ -149,6 +162,20 @@ export default function ExplosionScroll() {
                         display: "block",
                         width: "100%",
                         height: "100%",
+                    }}
+                />
+
+                {/* Final background fade */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: isFinalFrame ? 1 : 0 }}
+                    transition={{ duration: 1.6, ease: "easeInOut" }}
+                    style={{
+                        position: "absolute",
+                        inset: 0,
+                        backgroundColor: "#121212",
+                        pointerEvents: "none",
+                        zIndex: 1,
                     }}
                 />
 
