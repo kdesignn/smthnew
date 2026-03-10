@@ -55,8 +55,10 @@ export default function ExplosionScroll() {
 
         for (let i = 0; i < FRAME_COUNT; i++) {
             const img = new Image();
-            // Absolute path starting with the repository name prevents trailing slash issues
-            img.src = `${BASE_PATH}/ezgif-frame-${String(i + 1).padStart(3, "0")}.png`;
+            // Prefix with process.env.NEXT_PUBLIC_BASE_PATH for GH Pages, default to empty for local
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+            // Use an absolute path if there's a basePath, otherwise use a relative one starting with a slash
+            img.src = `${basePath}/sequence-1/ezgif-frame-${String(i + 1).padStart(3, "0")}.png`;
             imgs[i] = img;
 
             const onDone = () => {
