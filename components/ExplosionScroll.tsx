@@ -7,7 +7,7 @@ import ScrollArrow from "./ScrollArrow";
 
 const FRAME_COUNT = 128;
 // Use NODE_ENV to reliably determine if we are in the GitHub Pages production build
-const BASE_PATH = process.env.NODE_ENV === "production" ? "/smthnew/sequence-1" : "/sequence-1";
+const BASE_PATH = "/sequence-1";
 // Total scrollable height = 500vh, so scrollTrackHeight needs to exceed viewport
 // We set the container to 500vh and measure actual scrollable distance
 const SCROLL_MULTIPLIER = 5; // 500vh
