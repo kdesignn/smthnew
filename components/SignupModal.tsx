@@ -74,9 +74,9 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
                     style={{
                         backgroundColor: "#0e0e0e",
                         border: "1px solid rgba(255,255,255,0.1)",
-                        padding: "3.5rem 2.5rem",
+                        padding: "clamp(2rem, 8vw, 3.5rem) clamp(1.5rem, 6vw, 2.5rem)",
                         maxWidth: "420px",
-                        width: "90%",
+                        width: "92%",
                         position: "relative",
                     }}
                     onClick={(e) => e.stopPropagation()}
@@ -106,7 +106,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
                                 style={{
                                     fontFamily: "Inter, sans-serif",
                                     fontWeight: 800,
-                                    fontSize: "clamp(1.4rem, 3vw, 2rem)",
+                                    fontSize: "clamp(1.2rem, 5vw, 2rem)",
                                     letterSpacing: "0.1em",
                                     color: "white",
                                     margin: 0,
@@ -119,7 +119,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
                                 style={{
                                     fontFamily: "Inter, sans-serif",
                                     fontWeight: 300,
-                                    fontSize: "0.85rem",
+                                    fontSize: "clamp(0.75rem, 3vw, 0.85rem)",
                                     letterSpacing: "0.1em",
                                     color: "rgba(255,255,255,0.4)",
                                     marginTop: "0.5rem",
@@ -159,9 +159,9 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
                                     WebkitBackdropFilter: "blur(8px)",
                                     border: "1px solid rgba(255,255,255,0.85)",
                                     color: "white",
-                                    padding: "1rem 2.5rem",
+                                    padding: "clamp(0.8rem, 3vw, 1rem) clamp(1.5rem, 6vw, 2.5rem)",
                                     fontFamily: "Inter, sans-serif",
-                                    fontSize: "0.8rem",
+                                    fontSize: "clamp(0.7rem, 2.5vw, 0.8rem)",
                                     letterSpacing: "0.25em",
                                     textTransform: "uppercase",
                                     cursor: isSubmitting ? "wait" : "pointer",
@@ -203,7 +203,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
                                 style={{
                                     fontFamily: "Inter, sans-serif",
                                     fontWeight: 800,
-                                    fontSize: "clamp(1.4rem, 3vw, 2rem)",
+                                    fontSize: "clamp(1.2rem, 5vw, 2rem)",
                                     letterSpacing: "0.1em",
                                     color: "white",
                                     margin: 0,
@@ -216,7 +216,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
                                 style={{
                                     fontFamily: "Inter, sans-serif",
                                     fontWeight: 300,
-                                    fontSize: "0.85rem",
+                                    fontSize: "clamp(0.75rem, 3vw, 0.85rem)",
                                     letterSpacing: "0.1em",
                                     color: "rgba(255,255,255,0.4)",
                                     marginTop: "0.5rem",

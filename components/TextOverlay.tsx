@@ -109,8 +109,8 @@ function TextLine({
 
     const fontSize =
         block.size === "large"
-            ? "clamp(2.5rem, 6vw, 6rem)"
-            : "clamp(0.9rem, 2vw, 1.4rem)";
+            ? "clamp(1.8rem, 8vw, 6rem)"
+            : "clamp(0.85rem, 4vw, 1.4rem)";
 
     const fontWeight = block.weight === "bold" ? 900 : 300;
 
@@ -145,7 +145,7 @@ function TextLine({
                     textAlign: "center",
                     textTransform: block.weight === "bold" ? "uppercase" : "none",
                     lineHeight: 1.1,
-                    padding: "0 2rem",
+                    padding: "0 clamp(1rem, 5vw, 2rem)",
                     // Subtle text shadow for depth
                     textShadow:
                         block.weight === "bold"
@@ -164,6 +164,49 @@ export default function TextOverlay({ scrollYProgress }: TextOverlayProps) {
     const [showCTA, setShowCTA] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // About Panel State
+    const [isAtBottom, setIsAtBottom] = useState(false);
+    const [isAboutOpen, setIsAboutOpen] = useState(false);
+    const [showEyebrow, setShowEyebrow] = useState(false);
+    const [showLine1, setShowLine1] = useState(false);
+    const [showLine2, setShowLine2] = useState(false);
+    const [showLine3, setShowLine3] = useState(false);
+    const [showFinal, setShowFinal] = useState(false);
+
+    // Scroll listener for cross icon visibility
+    useEffect(() => {
+        const handleScroll = () => {
+            const bottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 40;
+            setIsAtBottom(bottom);
+        };
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll(); // Initial check
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    // Staggered reveal logic for About Panel
+    useEffect(() => {
+        if (isAboutOpen) {
+            setShowEyebrow(true);
+            const t1 = setTimeout(() => setShowLine1(true), 300);
+            const t2 = setTimeout(() => setShowLine2(true), 600);
+            const t3 = setTimeout(() => setShowLine3(true), 1000);
+            const t4 = setTimeout(() => setShowFinal(true), 1700);
+            return () => {
+                clearTimeout(t1);
+                clearTimeout(t2);
+                clearTimeout(t3);
+                clearTimeout(t4);
+            };
+        } else {
+            setShowEyebrow(false);
+            setShowLine1(false);
+            setShowLine2(false);
+            setShowLine3(false);
+            setShowFinal(false);
+        }
+    }, [isAboutOpen]);
+
     useEffect(() => {
         const unsubscribe = scrollYProgress.on("change", (latest) => {
             if (latest >= 0.94) {
@@ -177,6 +220,7 @@ export default function TextOverlay({ scrollYProgress }: TextOverlayProps) {
 
     return (
         <>
+            <style>{`@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');`}</style>
             <div
                 style={{
                     position: "absolute",
@@ -213,9 +257,9 @@ export default function TextOverlay({ scrollYProgress }: TextOverlayProps) {
                             WebkitBackdropFilter: "blur(8px)",
                             border: "1px solid rgba(255, 255, 255, 0.85)",
                             color: "white",
-                            padding: "1rem 2.5rem",
+                            padding: "clamp(0.8rem, 3vw, 1rem) clamp(1.5rem, 6vw, 2.5rem)",
                             fontFamily: "Inter, sans-serif",
-                            fontSize: "clamp(0.7rem, 1.2vw, 0.9rem)",
+                            fontSize: "clamp(0.7rem, 2.5vw, 0.9rem)",
                             letterSpacing: "0.25em",
                             textTransform: "uppercase",
                             cursor: "pointer",
@@ -237,6 +281,173 @@ export default function TextOverlay({ scrollYProgress }: TextOverlayProps) {
                 </motion.div>
             </div>
             <SignupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
+            {/* About Panel (Layer 40) */}
+            <div
+                style={{
+                    position: "fixed",
+                    inset: 0,
+                    backgroundColor: "#121212",
+                    zIndex: 40,
+                    transform: isAboutOpen ? "translateY(0)" : "translateY(100%)",
+                    transition: "transform 0.7s cubic-bezier(0.76, 0, 0.24, 1)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingBottom: "8rem", // Clear the icon
+                }}
+            >
+                <div
+                    style={{
+                        opacity: showEyebrow ? 1 : 0,
+                        transition: "opacity 0.5s ease",
+                        fontFamily: "Inter, sans-serif",
+                        fontSize: "clamp(0.55rem, 2vw, 0.62rem)",
+                        letterSpacing: "0.35em",
+                        color: "rgba(255,255,255,0.2)",
+                        textTransform: "uppercase",
+                        marginTop: "3vh",
+                        marginBottom: "4rem",
+                    }}
+                >
+                    Candy Drop — Berlin
+                </div>
+
+                <div
+                    style={{
+                        opacity: showLine1 ? 1 : 0,
+                        transition: "opacity 0.6s ease",
+                        fontFamily: "'Instrument Serif', serif",
+                        fontSize: "clamp(2.2rem, 10vw, 5.5rem)",
+                        color: "white",
+                        lineHeight: 1.1,
+                    }}
+                >
+                    No names.
+                </div>
+
+                <div
+                    style={{
+                        opacity: showLine2 ? 1 : 0,
+                        transition: "opacity 0.6s ease",
+                        fontFamily: "'Instrument Serif', serif",
+                        fontSize: "clamp(2.2rem, 10vw, 5.5rem)",
+                        color: "white",
+                        lineHeight: 1.1,
+                    }}
+                >
+                    No address.
+                </div>
+
+                <div
+                    style={{
+                        opacity: showLine3 ? 1 : 0,
+                        transition: "opacity 0.6s ease",
+                        fontFamily: "'Instrument Serif', serif",
+                        fontSize: "clamp(2.2rem, 10vw, 5.5rem)",
+                        color: "white",
+                        lineHeight: 1.1,
+                    }}
+                >
+                    No warning.
+                </div>
+
+                <div
+                    style={{
+                        opacity: showFinal ? 1 : 0,
+                        transition: "opacity 0.8s ease",
+                        marginTop: "4rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "2rem",
+                    }}
+                >
+                    <div
+                        style={{
+                            fontFamily: "'Instrument Serif', serif",
+                            fontStyle: "italic",
+                            fontSize: "clamp(2.2rem, 10vw, 5.5rem)",
+                            color: "rgba(255,255,255,0.35)",
+                            lineHeight: 1.1,
+                        }}
+                    >
+                        Just the drop.
+                    </div>
+
+                    <div
+                        style={{
+                            width: "1px",
+                            height: "3.5rem",
+                            backgroundColor: "rgba(255,255,255,0.08)",
+                        }}
+                    />
+
+                    <div
+                        style={{
+                            fontFamily: "Inter, sans-serif",
+                            fontSize: "clamp(0.65rem, 3vw, 0.75rem)",
+                            fontWeight: 300,
+                            letterSpacing: "0.14em",
+                            lineHeight: 2.2,
+                            color: "rgba(255,255,255,0.25)",
+                            textTransform: "uppercase",
+                            textAlign: "center",
+                        }}
+                    >
+                        We are a collective of one.<br />
+                        We come to you.<br />
+                        You will not find us.
+                    </div>
+                </div>
+            </div>
+
+            {/* Cross Icon Wrapper (Layer 50) */}
+            <div
+                style={{
+                    position: "fixed",
+                    bottom: "2.5rem",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    zIndex: 50,
+                    opacity: isAtBottom || isAboutOpen ? 1 : 0,
+                    pointerEvents: isAtBottom || isAboutOpen ? "auto" : "none",
+                    transition: "opacity 0.6s ease",
+                }}
+            >
+                <div
+                    onClick={() => setIsAboutOpen(!isAboutOpen)}
+                    style={{
+                        width: "clamp(40px, 10vw, 48px)",
+                        height: "clamp(40px, 10vw, 48px)",
+                        borderRadius: "50%",
+                        border: "1px solid rgba(255,255,255,0.3)",
+                        backgroundColor: "rgba(0,0,0,0.5)",
+                        backdropFilter: "blur(8px)",
+                        WebkitBackdropFilter: "blur(8px)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                    }}
+                >
+                    <span
+                        style={{
+                            fontFamily: "Inter, sans-serif",
+                            fontSize: "clamp(1.2rem, 4vw, 1.4rem)",
+                            fontWeight: 200,
+                            color: isAboutOpen ? "rgba(255,255,255,0.6)" : "white",
+                            transform: isAboutOpen ? "rotate(45deg)" : "rotate(0deg)",
+                            transition: "transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), color 0.5s ease",
+                            lineHeight: 0,
+                            marginTop: "-2px",
+                        }}
+                    >
+                        +
+                    </span>
+                </div>
+            </div>
         </>
     );
 }

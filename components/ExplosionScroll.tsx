@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { useMotionValue, useTransform, motion } from "framer-motion";
 import TextOverlay from "./TextOverlay";
+import ScrollArrow from "./ScrollArrow";
 
 const FRAME_COUNT = 128;
 // Use NODE_ENV to reliably determine if we are in the GitHub Pages production build
@@ -229,6 +230,9 @@ export default function ExplosionScroll() {
 
                 {/* Text overlay */}
                 {isReady && <TextOverlay scrollYProgress={scrollProgress} />}
+
+                {/* Scroll Indicator */}
+                {isReady && <ScrollArrow isHidden={isFinalFrame} />}
             </div>
 
             {/*
