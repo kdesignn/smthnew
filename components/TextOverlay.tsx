@@ -3,6 +3,7 @@
 import { useTransform, motion, MotionValue } from "framer-motion";
 import { useState, useEffect } from "react";
 import SignupModal from "./SignupModal";
+import ScrollArrow from "./ScrollArrow";
 
 interface TextOverlayProps {
     scrollYProgress: MotionValue<number>;
@@ -167,6 +168,7 @@ export default function TextOverlay({ scrollYProgress }: TextOverlayProps) {
     // About Panel State
     const [isAtBottom, setIsAtBottom] = useState(false);
     const [isAboutOpen, setIsAboutOpen] = useState(false);
+    const [bottomControlBlend, setBottomControlBlend] = useState(0);
     const [showEyebrow, setShowEyebrow] = useState(false);
     const [showLine1, setShowLine1] = useState(false);
     const [showLine2, setShowLine2] = useState(false);
@@ -187,23 +189,27 @@ export default function TextOverlay({ scrollYProgress }: TextOverlayProps) {
     // Staggered reveal logic for About Panel
     useEffect(() => {
         if (isAboutOpen) {
-            setShowEyebrow(true);
+            const t0 = setTimeout(() => setShowEyebrow(true), 0);
             const t1 = setTimeout(() => setShowLine1(true), 300);
             const t2 = setTimeout(() => setShowLine2(true), 600);
             const t3 = setTimeout(() => setShowLine3(true), 1000);
             const t4 = setTimeout(() => setShowFinal(true), 1700);
             return () => {
+                clearTimeout(t0);
                 clearTimeout(t1);
                 clearTimeout(t2);
                 clearTimeout(t3);
                 clearTimeout(t4);
             };
         } else {
-            setShowEyebrow(false);
-            setShowLine1(false);
-            setShowLine2(false);
-            setShowLine3(false);
-            setShowFinal(false);
+            const t0 = setTimeout(() => {
+                setShowEyebrow(false);
+                setShowLine1(false);
+                setShowLine2(false);
+                setShowLine3(false);
+                setShowFinal(false);
+            }, 0);
+            return () => clearTimeout(t0);
         }
     }, [isAboutOpen]);
 
@@ -214,9 +220,14 @@ export default function TextOverlay({ scrollYProgress }: TextOverlayProps) {
             } else {
                 setShowCTA(false);
             }
+
+            const start = 0.93;
+            const end = 0.99;
+            const blend = Math.min(Math.max((latest - start) / (end - start), 0), 1);
+            setBottomControlBlend(isAtBottom ? 1 : blend);
         });
         return unsubscribe;
-    }, [scrollYProgress]);
+    }, [isAtBottom, scrollYProgress]);
 
     return (
         <>
@@ -403,51 +414,12 @@ export default function TextOverlay({ scrollYProgress }: TextOverlayProps) {
                 </div>
             </div>
 
-            {/* Cross Icon Wrapper (Layer 50) */}
-            <div
-                style={{
-                    position: "fixed",
-                    bottom: "2.5rem",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    zIndex: 50,
-                    opacity: isAtBottom || isAboutOpen ? 1 : 0,
-                    pointerEvents: isAtBottom || isAboutOpen ? "auto" : "none",
-                    transition: "opacity 0.6s ease",
-                }}
-            >
-                <div
-                    onClick={() => setIsAboutOpen(!isAboutOpen)}
-                    style={{
-                        width: "clamp(40px, 10vw, 48px)",
-                        height: "clamp(40px, 10vw, 48px)",
-                        borderRadius: "50%",
-                        border: "1px solid rgba(255,255,255,0.3)",
-                        backgroundColor: "rgba(0,0,0,0.5)",
-                        backdropFilter: "blur(8px)",
-                        WebkitBackdropFilter: "blur(8px)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        cursor: "pointer",
-                    }}
-                >
-                    <span
-                        style={{
-                            fontFamily: "Inter, sans-serif",
-                            fontSize: "clamp(1.2rem, 4vw, 1.4rem)",
-                            fontWeight: 200,
-                            color: isAboutOpen ? "rgba(255,255,255,0.6)" : "white",
-                            transform: isAboutOpen ? "rotate(45deg)" : "rotate(0deg)",
-                            transition: "transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), color 0.5s ease",
-                            lineHeight: 0,
-                            marginTop: "-2px",
-                        }}
-                    >
-                        +
-                    </span>
-                </div>
-            </div>
+            <ScrollArrow
+                blend={bottomControlBlend}
+                isAboutOpen={isAboutOpen}
+                isInteractive={isAtBottom || bottomControlBlend > 0.85 || isAboutOpen}
+                onToggleAbout={() => setIsAboutOpen((value) => !value)}
+            />
         </>
     );
 }

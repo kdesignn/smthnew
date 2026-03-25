@@ -1,13 +1,12 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
-import { useMotionValue, useTransform, motion } from "framer-motion";
+import { useMotionValue, motion } from "framer-motion";
 import TextOverlay from "./TextOverlay";
-import ScrollArrow from "./ScrollArrow";
 
 const FRAME_COUNT = 128;
-// Use NODE_ENV to reliably determine if we are in the GitHub Pages production build
-const BASE_PATH = "/sequence-1";
+const basePathPrefix = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
+const BASE_PATH = `${basePathPrefix}/sequence-n`;
 // Total scrollable height = 500vh, so scrollTrackHeight needs to exceed viewport
 // We set the container to 500vh and measure actual scrollable distance
 const SCROLL_MULTIPLIER = 5; // 500vh
@@ -132,7 +131,7 @@ export default function ExplosionScroll() {
 
     useEffect(() => {
         const unsubscribe = scrollProgress.on("change", (latest) => {
-            if (latest >= 0.982) {
+            if (latest >= 0.96) {
                 setIsFinalFrame(true);
             } else {
                 setIsFinalFrame(false);
@@ -170,7 +169,7 @@ export default function ExplosionScroll() {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: isFinalFrame ? 1 : 0 }}
-                    transition={{ duration: 1.6, ease: "easeInOut" }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
                     style={{
                         position: "absolute",
                         inset: 0,
@@ -231,8 +230,6 @@ export default function ExplosionScroll() {
                 {/* Text overlay */}
                 {isReady && <TextOverlay scrollYProgress={scrollProgress} />}
 
-                {/* Scroll Indicator */}
-                {isReady && <ScrollArrow isHidden={isFinalFrame} />}
             </div>
 
             {/*

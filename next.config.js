@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 const nextConfig = {
     reactStrictMode: true,
-    output: 'export',
+    output: "export",
+    basePath,
+    assetPrefix: basePath ? `${basePath}/` : undefined,
+    turbopack: {
+        root: __dirname,
+    },
     images: {
         unoptimized: true,
     },

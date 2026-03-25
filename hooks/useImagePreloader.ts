@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import type { RefObject } from "react";
+import { useRef } from "react";
 
 interface PreloadedImages {
     images: HTMLImageElement[];

@@ -113,7 +113,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
                                     textTransform: "uppercase",
                                 }}
                             >
-                                YOU'RE EARLY.
+                                YOU&apos;RE EARLY.
                             </h2>
                             <p
                                 style={{
@@ -210,7 +210,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
                                     textTransform: "uppercase",
                                 }}
                             >
-                                YOU'RE ON THE LIST.
+                                YOU&apos;RE ON THE LIST.
                             </h2>
                             <p
                                 style={{
@@ -222,7 +222,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
                                     marginTop: "0.5rem",
                                 }}
                             >
-                                We'll find you when it drops.
+                                We&apos;ll find you when it drops.
                             </p>
                         </div>
                     )}
